@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
 import { Input, Label } from "@/components/ui/Input";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { OtpInput } from "@/components/ui/OtpInput";
 
 function ForgotPasswordForm() {
@@ -84,9 +85,8 @@ function ForgotPasswordForm() {
         <form onSubmit={handleReset} className="mt-8 flex flex-col gap-4">
           <div>
             <Label htmlFor="password">New password</Label>
-            <Input
+            <PasswordInput
               id="password"
-              type="password"
               required
               minLength={6}
               value={password}

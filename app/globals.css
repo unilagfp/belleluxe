@@ -58,3 +58,13 @@ body {
 * {
   border-color: var(--border);
 }
+
+/* Prevent iOS Safari's auto-zoom on focus, which is triggered by any
+   form field with a computed font-size under 16px. */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
