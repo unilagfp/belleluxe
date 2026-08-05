@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, ShoppingBag, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { CurrencySwitcher } from "./CurrencySwitcher";
 import { cn } from "@/lib/utils/cn";
 
 const NAV_LINKS = [
@@ -39,6 +40,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <CurrencySwitcher />
           <ThemeToggle />
           <Link
             href="/cart"

@@ -1,0 +1,87 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/Button";
+import { Input, Label } from "@/components/ui/Input";
+
+export default function LoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+      return;
+    }
+
+    router.push(searchParams.get("next") || "/account");
+    router.refresh();
+  }
+
+  return (
+    <div className="mx-auto flex max-w-md flex-col px-4 py-16 sm:px-6">
+      <h1 className="font-display text-3xl font-bold">Welcome back</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Sign in to track your orders and manage your account.
+      </p>
+
+      <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
+        <div>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+          />
+        </div>
+        <div>
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+          />
+        </div>
+
+        {error && <p className="text-sm text-red-600">{error}</p>}
+
+        <Button type="submit" loading={loading} className="mt-2 w-full">
+          Sign in
+        </Button>
+      </form>
+
+      <div className="mt-6 flex flex-col gap-2 text-sm text-muted-foreground">
+        <Link href="/forgot-password" className="hover:text-primary">
+          Forgot your password?
+        </Link>
+        <p>
+          New here?{" "}
+          <Link href="/register" className="font-medium text-primary">
+            Create an account
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+}
