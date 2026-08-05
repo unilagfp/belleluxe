@@ -60,6 +60,21 @@ export async function getShopProducts(categorySlug?: string): Promise<ProductCar
   return ((data as ListingRow[] | null) ?? []).map(toCardData);
 }
 
+export type ContentBlock = { is_visible: boolean; content: Record<string, string> };
+
+export async function getContentBlocks(): Promise<Record<string, ContentBlock>> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("site_content_blocks")
+    .select("key, is_visible, content");
+
+  const map: Record<string, ContentBlock> = {};
+  for (const row of data ?? []) {
+    map[row.key] = { is_visible: row.is_visible, content: (row.content as Record<string, string>) ?? {} };
+  }
+  return map;
+}
+
 export async function getCategories() {
   const supabase = await createClient();
   const { data } = await supabase

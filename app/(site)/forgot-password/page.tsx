@@ -1,13 +1,17 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
 import { Input, Label } from "@/components/ui/Input";
+import { OtpInput } from "@/components/ui/OtpInput";
 
-export default function ForgotPasswordPage() {
+function ForgotPasswordForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next") || "/account";
+
   const [step, setStep] = useState<"request" | "verify" | "reset">("request");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
@@ -69,7 +73,7 @@ export default function ForgotPasswordPage() {
       return;
     }
 
-    router.push("/account");
+    router.push(next);
     router.refresh();
   }
 
@@ -107,22 +111,9 @@ export default function ForgotPasswordPage() {
           We sent a 6-digit code to <strong>{email}</strong>.
         </p>
         <form onSubmit={handleVerify} className="mt-8 flex flex-col gap-4">
-          <div>
-            <Label htmlFor="otp">Verification code</Label>
-            <Input
-              id="otp"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              maxLength={6}
-              required
-              value={otp}
-              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-              placeholder="123456"
-              className="text-center text-lg tracking-[0.5em]"
-            />
-          </div>
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          <Button type="submit" loading={loading} className="mt-2 w-full">
+          <OtpInput value={otp} onChange={setOtp} />
+          {error && <p className="text-center text-sm text-red-600">{error}</p>}
+          <Button type="submit" loading={loading} disabled={otp.length < 6} className="mt-2 w-full">
             Verify code
           </Button>
         </form>
@@ -157,5 +148,13 @@ export default function ForgotPasswordPage() {
         </Button>
       </form>
     </div>
+  );
+}
+
+export default function ForgotPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ForgotPasswordForm />
+    </Suspense>
   );
 }

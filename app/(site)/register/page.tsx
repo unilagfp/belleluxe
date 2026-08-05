@@ -6,6 +6,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
 import { Input, Label } from "@/components/ui/Input";
+import { OtpInput } from "@/components/ui/OtpInput";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -83,30 +84,17 @@ export default function RegisterPage() {
         </p>
 
         <form onSubmit={handleVerify} className="mt-8 flex flex-col gap-4">
-          <div>
-            <Label htmlFor="otp">Verification code</Label>
-            <Input
-              id="otp"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              maxLength={6}
-              required
-              value={otp}
-              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-              placeholder="123456"
-              className="text-center text-lg tracking-[0.5em]"
-            />
-          </div>
+          <OtpInput value={otp} onChange={setOtp} />
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-center text-sm text-red-600">{error}</p>}
 
-          <Button type="submit" loading={loading} className="mt-2 w-full">
+          <Button type="submit" loading={loading} disabled={otp.length < 6} className="mt-2 w-full">
             Verify & continue
           </Button>
           <button
             type="button"
             onClick={handleResend}
-            className="text-sm text-muted-foreground hover:text-primary"
+            className="text-center text-sm text-muted-foreground hover:text-primary"
           >
             Didn&apos;t get a code? Resend
           </button>

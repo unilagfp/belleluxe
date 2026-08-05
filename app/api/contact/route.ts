@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { sendContactNotificationEmail } from "@/lib/email/brevo";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -15,6 +16,10 @@ export async function POST(request: Request) {
   if (error) {
     return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });
   }
+
+  sendContactNotificationEmail({ name, email, phone, message }).catch((err) =>
+    console.error("Contact notification email failed:", err)
+  );
 
   return NextResponse.json({ success: true });
 }

@@ -1,12 +1,20 @@
 import Link from "next/link";
-import { getFeaturedProducts } from "@/lib/supabase/queries";
+import { getFeaturedProducts, getContentBlocks } from "@/lib/supabase/queries";
 import { ProductCard } from "@/components/site/ProductCard";
 
 export default async function Home() {
-  const featured = await getFeaturedProducts(4);
+  const [featured, blocks] = await Promise.all([getFeaturedProducts(4), getContentBlocks()]);
+  const showAbout = blocks.about_section?.is_visible ?? true;
+  const promoBanner = blocks.promo_banner;
 
   return (
     <div>
+      {promoBanner?.is_visible && (
+        <div className="bg-primary px-4 py-2.5 text-center text-sm font-medium text-primary-foreground">
+          {promoBanner.content?.headline || "Limited-time offer — check the shop for details."}
+        </div>
+      )}
+
       <section
         className="relative overflow-hidden"
         style={{
@@ -78,44 +86,46 @@ export default async function Home() {
         </Link>
       </section>
 
-      <section className="border-y border-border bg-surface-muted">
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary">
-              About BELLÉLUXE
-            </p>
-            <h2 className="mt-3 font-display text-3xl font-bold sm:text-4xl">
-              Beauty should never feel like a chore.
-            </h2>
-            <p className="mt-4 text-muted-foreground">
-              We believe beauty should never feel like a chore. Our premium
-              hair extensions and braided wigs are crafted to make life easier
-              for the girlies — saving time, serving looks, and boosting
-              confidence. For the girlies that do it all, we&apos;re here to
-              take the stress out of styling, one luxe strand at a time.
-            </p>
-            <Link
-              href="/about"
-              className="mt-6 inline-block rounded-full border border-border bg-surface px-6 py-2.5 text-sm font-semibold hover:bg-background"
-            >
-              Read our story
-            </Link>
+      {showAbout && (
+        <section className="border-y border-border bg-surface-muted">
+          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-primary">
+                About BELLÉLUXE
+              </p>
+              <h2 className="mt-3 font-display text-3xl font-bold sm:text-4xl">
+                Beauty should never feel like a chore.
+              </h2>
+              <p className="mt-4 text-muted-foreground">
+                We believe beauty should never feel like a chore. Our premium
+                hair extensions and braided wigs are crafted to make life easier
+                for the girlies — saving time, serving looks, and boosting
+                confidence. For the girlies that do it all, we&apos;re here to
+                take the stress out of styling, one luxe strand at a time.
+              </p>
+              <Link
+                href="/about"
+                className="mt-6 inline-block rounded-full border border-border bg-surface px-6 py-2.5 text-sm font-semibold hover:bg-background"
+              >
+                Read our story
+              </Link>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {featured.slice(0, 3).map((product) =>
+                product.imageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    key={product.slug}
+                    src={product.imageUrl}
+                    alt={product.name}
+                    className="aspect-square w-full rounded-xl object-cover"
+                  />
+                ) : null
+              )}
+            </div>
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            {featured.slice(0, 3).map((product) =>
-              product.imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={product.slug}
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="aspect-square w-full rounded-xl object-cover"
-                />
-              ) : null
-            )}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className="mx-auto max-w-6xl px-4 py-16 text-center sm:px-6 sm:py-20">
         <h2 className="font-display text-2xl font-bold sm:text-3xl">

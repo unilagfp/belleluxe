@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Minus, Plus } from "lucide-react";
+import { Check, Minus, Plus } from "lucide-react";
 import { useCurrency } from "@/components/currency-provider";
 import { useCart } from "@/components/cart-provider";
 import { Button } from "@/components/ui/Button";
@@ -178,7 +178,15 @@ export function ProductDetail({ product }: { product: Product }) {
             </div>
 
             <Button onClick={handleAddToCart} disabled={outOfStock} className="flex-1">
-              {outOfStock ? "Sold out" : added ? "Added ✓" : "Add to bag"}
+              {outOfStock ? (
+                "Sold out"
+              ) : added ? (
+                <>
+                  <Check size={16} /> Added
+                </>
+              ) : (
+                "Add to bag"
+              )}
             </Button>
           </div>
 
