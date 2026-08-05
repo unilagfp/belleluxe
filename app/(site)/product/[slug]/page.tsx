@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getStoragePublicUrl } from "@/lib/supabase/storage";
+import { getFavoriteProductIds } from "@/lib/supabase/queries";
 import { ProductDetail } from "./ProductDetail";
 
 export default async function ProductPage({
@@ -23,6 +24,7 @@ export default async function ProductPage({
 
   if (!product) notFound();
 
+  const favoriteIds = await getFavoriteProductIds();
   const variants = [...product.product_variants].sort((a, b) => a.sort_order - b.sort_order);
   const images = [...product.product_images]
     .sort((a, b) => {
@@ -45,6 +47,7 @@ export default async function ProductPage({
         variants,
         images,
       }}
+      initialFavorited={favoriteIds.has(product.id)}
     />
   );
 }

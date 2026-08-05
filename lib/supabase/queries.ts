@@ -25,6 +25,7 @@ function toCardData(row: ListingRow): ProductCardData {
     })[0] ?? null;
 
   return {
+    id: row.id,
     slug: row.slug,
     name: row.name,
     imageUrl: primaryImage
@@ -73,6 +74,17 @@ export async function getContentBlocks(): Promise<Record<string, ContentBlock>> 
     map[row.key] = { is_visible: row.is_visible, content: (row.content as Record<string, string>) ?? {} };
   }
   return map;
+}
+
+export async function getFavoriteProductIds(): Promise<Set<string>> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return new Set();
+
+  const { data } = await supabase.from("favorites").select("product_id").eq("user_id", user.id);
+  return new Set((data ?? []).map((row) => row.product_id));
 }
 
 export async function getCategories() {

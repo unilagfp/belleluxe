@@ -7,6 +7,7 @@ import { Check, Minus, Plus } from "lucide-react";
 import { useCurrency } from "@/components/currency-provider";
 import { useCart } from "@/components/cart-provider";
 import { Button } from "@/components/ui/Button";
+import { FavoriteButton } from "@/components/site/FavoriteButton";
 
 type Variant = {
   id: string;
@@ -28,7 +29,13 @@ type Product = {
   images: ProductImage[];
 };
 
-export function ProductDetail({ product }: { product: Product }) {
+export function ProductDetail({
+  product,
+  initialFavorited = false,
+}: {
+  product: Product;
+  initialFavorited?: boolean;
+}) {
   const { format } = useCurrency();
   const { addItem } = useCart();
 
@@ -119,7 +126,14 @@ export function ProductDetail({ product }: { product: Product }) {
         </div>
 
         <div>
-          <h1 className="font-display text-3xl font-bold">{product.name}</h1>
+          <div className="flex items-start justify-between gap-3">
+            <h1 className="font-display text-3xl font-bold">{product.name}</h1>
+            <FavoriteButton
+              productId={product.id}
+              initialFavorited={initialFavorited}
+              className="border border-border shadow-none"
+            />
+          </div>
           <p className="mt-2 text-2xl font-semibold text-primary">
             {format(selectedVariant?.price_ngn ?? 0)}
           </p>

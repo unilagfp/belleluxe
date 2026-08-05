@@ -1,13 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getFeaturedProducts, getContentBlocks } from "@/lib/supabase/queries";
+import { getFeaturedProducts, getContentBlocks, getFavoriteProductIds } from "@/lib/supabase/queries";
 import { ProductCard } from "@/components/site/ProductCard";
 import { getStoragePublicUrl } from "@/lib/supabase/storage";
 
 const HERO_IMAGE_PATH = "a22c9761-1aad-40f9-837a-11e436e704ee/braided-ponytail.jpg";
 
 export default async function Home() {
-  const [featured, blocks] = await Promise.all([getFeaturedProducts(4), getContentBlocks()]);
+  const [featured, blocks, favoriteIds] = await Promise.all([
+    getFeaturedProducts(4),
+    getContentBlocks(),
+    getFavoriteProductIds(),
+  ]);
   const showAbout = blocks.about_section?.is_visible ?? true;
   const promoBanner = blocks.promo_banner;
 
@@ -88,7 +92,11 @@ export default async function Home() {
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
             {featured.map((product) => (
-              <ProductCard key={product.slug} product={product} />
+              <ProductCard
+                key={product.slug}
+                product={product}
+                initialFavorited={favoriteIds.has(product.id)}
+              />
             ))}
           </div>
         )}

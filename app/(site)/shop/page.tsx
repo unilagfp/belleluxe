@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getShopProducts, getCategories } from "@/lib/supabase/queries";
+import { getShopProducts, getCategories, getFavoriteProductIds } from "@/lib/supabase/queries";
 import { ProductCard } from "@/components/site/ProductCard";
 import { cn } from "@/lib/utils/cn";
 
@@ -11,9 +11,10 @@ export default async function ShopPage({
   searchParams: Promise<{ category?: string }>;
 }) {
   const { category } = await searchParams;
-  const [products, categories] = await Promise.all([
+  const [products, categories, favoriteIds] = await Promise.all([
     getShopProducts(category),
     getCategories(),
+    getFavoriteProductIds(),
   ]);
 
   return (
@@ -60,7 +61,11 @@ export default async function ShopPage({
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
           {products.map((product) => (
-            <ProductCard key={product.slug} product={product} />
+            <ProductCard
+              key={product.slug}
+              product={product}
+              initialFavorited={favoriteIds.has(product.id)}
+            />
           ))}
         </div>
       )}

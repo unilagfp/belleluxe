@@ -30,6 +30,12 @@ export default async function AccountPage() {
         >
           View my orders
         </Link>
+        <Link
+          href="/account/favorites"
+          className="rounded-full border border-border bg-surface px-6 py-2.5 text-sm font-semibold hover:bg-surface-muted"
+        >
+          My favorites
+        </Link>
         <SignOutButton />
       </div>
     </div>

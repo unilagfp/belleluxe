@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, ShoppingBag, User, X } from "lucide-react";
+import { Menu, ShoppingBag, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySwitcher } from "./CurrencySwitcher";
+import { AccountMenu } from "./AccountMenu";
 import { useCart } from "@/components/cart-provider";
 import { cn } from "@/lib/utils/cn";
 
@@ -44,13 +45,7 @@ export function Header() {
         <div className="flex items-center gap-2">
           <CurrencySwitcher />
           <ThemeToggle />
-          <Link
-            href="/account"
-            aria-label="Account"
-            className="hidden h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-surface-muted sm:flex"
-          >
-            <User size={17} />
-          </Link>
+          <AccountMenu />
           <button
             type="button"
             onClick={openCart}
