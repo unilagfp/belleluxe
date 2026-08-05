@@ -1,6 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getFeaturedProducts, getContentBlocks } from "@/lib/supabase/queries";
 import { ProductCard } from "@/components/site/ProductCard";
+import { getStoragePublicUrl } from "@/lib/supabase/storage";
+
+const HERO_IMAGE_PATH = "a22c9761-1aad-40f9-837a-11e436e704ee/braided-ponytail.jpg";
 
 export default async function Home() {
   const [featured, blocks] = await Promise.all([getFeaturedProducts(4), getContentBlocks()]);
@@ -15,34 +19,45 @@ export default async function Home() {
         </div>
       )}
 
-      <section
-        className="relative overflow-hidden"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--color-brand-purple-light) 55%, transparent), transparent 60%), radial-gradient(circle at 80% 0%, color-mix(in srgb, var(--color-brand-purple) 45%, transparent), transparent 55%)",
-        }}
-      >
-        <div className="mx-auto flex max-w-6xl flex-col items-center px-4 py-20 text-center sm:px-6 sm:py-28">
-          <p className="rounded-full border border-primary/30 bg-surface px-4 py-1 text-xs font-medium uppercase tracking-widest text-primary">
+      <section className="relative isolate flex min-h-[560px] items-center overflow-hidden sm:min-h-[640px]">
+        <Image
+          src={getStoragePublicUrl("product-images", HERO_IMAGE_PATH)}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+          style={{ objectPosition: "50% 15%" }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(20,10,25,0.75) 0%, rgba(30,15,35,0.55) 45%, rgba(20,10,25,0.8) 100%)",
+          }}
+        />
+
+        <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center px-4 py-20 text-center sm:px-6 sm:py-28">
+          <p className="rounded-full border border-white/25 bg-white/10 px-4 py-1 text-xs font-medium uppercase tracking-widest text-white backdrop-blur-sm">
             Nigeria&apos;s hair, elevated
           </p>
-          <h1 className="mt-6 font-display text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
+          <h1 className="mt-6 font-display text-4xl font-bold leading-tight tracking-tight text-white sm:text-6xl">
             Beauty, Attitude, <span className="text-primary">Luxe.</span>
           </h1>
-          <p className="mt-5 max-w-xl text-balance text-base text-muted-foreground sm:text-lg">
+          <p className="mt-5 max-w-xl text-balance text-base text-white/85 sm:text-lg">
             Premium hair extensions and braided wigs crafted to make life easier
             for the girlies that do it all — one luxe strand at a time.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/shop"
-              className="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-transform hover:scale-[1.02]"
+              className="rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 transition-transform hover:scale-[1.02]"
             >
               Shop the collection
             </Link>
             <Link
               href="/about"
-              className="rounded-full border border-border bg-surface px-8 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-surface-muted"
+              className="rounded-full border border-white/30 bg-white/10 px-8 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
             >
               Our story
             </Link>
