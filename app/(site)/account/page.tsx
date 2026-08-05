@@ -10,7 +10,7 @@ export default async function AccountPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, phone")
+    .select("full_name, phone, role")
     .eq("id", user!.id)
     .single();
 
@@ -22,6 +22,15 @@ export default async function AccountPage() {
         <p className="font-medium">{profile?.full_name || user?.email}</p>
         <p className="text-sm text-muted-foreground">{user?.email}</p>
       </div>
+
+      {profile?.role === "admin" && (
+        <Link
+          href="/admin"
+          className="mt-4 inline-block rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground"
+        >
+          Go to admin dashboard
+        </Link>
+      )}
 
       <div className="mt-6 flex flex-wrap gap-3">
         <Link
