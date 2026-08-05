@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, ShoppingBag, X } from "lucide-react";
+import { Menu, ShoppingBag, User, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { CurrencySwitcher } from "./CurrencySwitcher";
+import { useCart } from "@/components/cart-provider";
 import { cn } from "@/lib/utils/cn";
 
 const NAV_LINKS = [
@@ -15,6 +16,7 @@ const NAV_LINKS = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const { count, open: openCart } = useCart();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur">
@@ -43,12 +45,25 @@ export function Header() {
           <CurrencySwitcher />
           <ThemeToggle />
           <Link
-            href="/cart"
+            href="/account"
+            aria-label="Account"
+            className="hidden h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-surface-muted sm:flex"
+          >
+            <User size={17} />
+          </Link>
+          <button
+            type="button"
+            onClick={openCart}
             aria-label="View cart"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-surface-muted"
+            className="relative flex h-9 w-9 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-surface-muted"
           >
             <ShoppingBag size={17} />
-          </Link>
+            {count > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                {count}
+              </span>
+            )}
+          </button>
           <button
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}

@@ -1,6 +1,8 @@
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { CurrencyProvider } from "@/components/currency-provider";
+import { CartProvider } from "@/components/cart-provider";
+import { CartDrawer } from "@/components/site/CartDrawer";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 
@@ -21,11 +23,14 @@ export default async function SiteLayout({
 
   return (
     <CurrencyProvider rates={rates ?? []} initialCode={initialCode}>
-      <div className="flex min-h-screen flex-col">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-      </div>
+      <CartProvider>
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
+        <CartDrawer />
+      </CartProvider>
     </CurrencyProvider>
   );
 }
