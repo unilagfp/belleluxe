@@ -66,9 +66,17 @@ function AdminLoginForm() {
 
         {error && <p className="text-sm text-red-600">{error}</p>}
 
-        <Button type="submit" loading={loading} className="mt-2 w-full">
-          Sign in
-        </Button>
+        <div className="mt-2 flex gap-3">
+          <Link
+            href="/"
+            className="flex flex-1 items-center justify-center rounded-full border border-border bg-surface px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-muted"
+          >
+            Cancel
+          </Link>
+          <Button type="submit" loading={loading} className="flex-1">
+            Sign in
+          </Button>
+        </div>
       </form>
 
       <Link

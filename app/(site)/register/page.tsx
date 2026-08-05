@@ -89,9 +89,17 @@ export default function RegisterPage() {
 
           {error && <p className="text-center text-sm text-red-600">{error}</p>}
 
-          <Button type="submit" loading={loading} disabled={otp.length < 6} className="mt-2 w-full">
-            Verify & continue
-          </Button>
+          <div className="mt-2 flex gap-3">
+            <Link
+              href="/"
+              className="flex flex-1 items-center justify-center rounded-full border border-border bg-surface px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-muted"
+            >
+              Cancel
+            </Link>
+            <Button type="submit" loading={loading} disabled={otp.length < 6} className="flex-1">
+              Verify & continue
+            </Button>
+          </div>
           <button
             type="button"
             onClick={handleResend}
@@ -147,9 +155,17 @@ export default function RegisterPage() {
 
         {error && <p className="text-sm text-red-600">{error}</p>}
 
-        <Button type="submit" loading={loading} className="mt-2 w-full">
-          Create account
-        </Button>
+        <div className="mt-2 flex gap-3">
+          <Link
+            href="/"
+            className="flex flex-1 items-center justify-center rounded-full border border-border bg-surface px-6 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-muted"
+          >
+            Cancel
+          </Link>
+          <Button type="submit" loading={loading} className="flex-1">
+            Create account
+          </Button>
+        </div>
       </form>
 
       <p className="mt-6 text-sm text-muted-foreground">
