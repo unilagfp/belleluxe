@@ -1,12 +1,12 @@
 "use client";
 
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
 import { Input, Label } from "@/components/ui/Input";
 
-export default function AdminLoginPage() {
+function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
@@ -37,40 +37,48 @@ export default function AdminLoginPage() {
   }
 
   return (
+    <div className="w-full max-w-sm rounded-xl border border-border bg-surface p-8 shadow-sm">
+      <h1 className="font-display text-2xl font-bold text-primary">BELLÉLUXE Admin</h1>
+      <p className="mt-1 text-sm text-muted-foreground">Sign in to manage the store.</p>
+
+      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
+        <div>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+
+        {error && <p className="text-sm text-red-600">{error}</p>}
+
+        <Button type="submit" loading={loading} className="mt-2 w-full">
+          Sign in
+        </Button>
+      </form>
+    </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
     <div className="flex min-h-screen items-center justify-center bg-surface-muted px-4">
-      <div className="w-full max-w-sm rounded-xl border border-border bg-surface p-8 shadow-sm">
-        <h1 className="font-display text-2xl font-bold text-primary">BELLÉLUXE Admin</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Sign in to manage the store.</p>
-
-        <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          {error && <p className="text-sm text-red-600">{error}</p>}
-
-          <Button type="submit" loading={loading} className="mt-2 w-full">
-            Sign in
-          </Button>
-        </form>
-      </div>
+      <Suspense fallback={null}>
+        <AdminLoginForm />
+      </Suspense>
     </div>
   );
 }
